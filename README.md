@@ -1,112 +1,85 @@
-# IELTS Vocabulary 3673
+# 雅思词汇真经：轮次背词与主题故事
 
-一个离线优先的雅思词汇闪卡与主题故事阅读工具。它是为“每天少量复习、在语境里记词、能看到自己的复习进度”做的，不依赖登录即可使用。
+**一轮轮找出记不住的词，再到短篇故事里理解它们。**
 
-## 使用
+围绕《雅思词汇真经》章节词表做的个人学习工具：22 个主题章节、3673 个词条，以及 177 篇主题短篇故事。你可以只刷闪卡，也可以只读故事，或把两种练习配合起来。
 
-直接打开 `public/index.html`、`public/flashcards.html` 或 `public/stories.html`；需要本地开发时运行 `npm install && npm run dev`。进度默认保存在浏览器本地。云同步功能需要用户自行部署 Worker 和 D1，并配置自己的地址与同步码。
+## 为什么做这个
 
-## 注意
+做闪卡的出发点，是把**轮次背词法**落实到一个能持续使用的小工具里：快速过一轮，遇到不认识的词做标记，下一轮再见；反复出现的难词，单独拿出来练。这样不用一边背词，一边手动记“哪个词又忘了”。
 
-本仓库不提供任何 API Key，也不保证第三方发音服务长期可用。词汇释义和教材内容请确认版权与使用范围；发布版不包含私人学习记录。问题和建议请通过 GitHub Issues 联系作者。
+主题故事来自另一个想法：如果把同一主题的生词放进短篇英文故事里，记住的就不只是一个中文释义，还可能包括场景、搭配和一句完整的话。它是对轮次背词的补充，希望让记忆多一点线索；**目前没有对照实验，不能据此宣称一定记得更快或更牢。**
 
-配套 AI 工作流见 [`skills/ielts-vocab-coach`](skills/ielts-vocab-coach/SKILL.md)。
+适合已经在按主题背雅思词汇、想反复筛选难词，也想增加语境阅读的人。
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+## 两种练法，分别解决什么问题
 
-## Prerequisites
+| 练法 | 你做什么 | 工具帮你记录或提供什么 |
+|---|---|---|
+| 轮次闪卡 | 看词、快速回忆、判断认识与否，反复过同一组词 | 累计不认识次数、连续认识次数、顽固词筛选、章节统计 |
+| 主题故事 | 在短文里读目标词，听句子，再回忆词义和用法 | 目标词高亮、中文理解、逐句朗读、词块与语法说明、近义与易混词、已读标记 |
 
-- Node.js `>=22.13.0`
+### 闪卡的“点”和“轮次”怎么理解
 
-## Quick Start
+- **不认识：加 1 个点。** 翻到答案停一下，查看释义、听发音，再进入下一词。
+- **认识：不减累计点。** 过去卡住过几次的记录仍然保留。
+- **连续认识：单独累计。** 再次不认识会把连续认识次数归零。
+- **顽固词：累计不认识至少 2 次的词。** 可以切换到这一组集中复习；后来认识了，也不会自动清掉历史难词标记。
+- 看板把连续认识至少 3 次列为“当前掌握”，这是程序的统计口径，不等于长期记忆测试通过。
 
-```bash
-npm install
-npm run dev
-npm run build
+当前实现是**每个词的作答计数和连续认识计数**：列表末尾会回到开头。界面中的“连认 3 轮”并不验证你已完整刷完三遍章节，也不要求三次练习发生在不同日期。它还没有按天安排复习、完整轮次日志或间隔重复调度。
+
+### 主题故事能怎么读
+
+每篇都有一组目标词。可以先读英文、自己猜意思，再对照中文理解；点击目标词查看释义，点击句子听朗读。还可以播放整篇、调整语速、单句循环，查看词块、句法和易混词说明。
+
+故事已经随页面提供，**打开阅读不需要调用大模型，也不需要填写 AI API Key**。故事已读状态和闪卡的掌握记录各自保存，读完一篇不会自动把其中的词标成认识。
+
+## 先试一轮：15 分钟示例
+
+1. **5 分钟闪卡**：选一个章节，先回忆再看答案。遇到不认识的词，诚实加点。
+2. **7 分钟故事**：打开对应主题的一篇短文，关注刚才卡住的词；选两三句听读。
+3. **3 分钟回忆**：回到闪卡再测，或者关掉短文，用几个目标词复述故事。
+
+时间只是练习示例，可以缩短。更多操作与计数例子见 [练习示例](examples/practice.md)。
+
+## 在自己的电脑上打开
+
+下载仓库并解压，在仓库目录运行：
+
+```sh
+python3 -m http.server 8000 --bind 127.0.0.1 --directory public
 ```
 
-This starter does not use `wrangler.jsonc`.
+然后打开：
 
-## Included Shape
+- 闪卡：<http://127.0.0.1:8000/flashcards.html>
+- 主题故事：<http://127.0.0.1:8000/stories.html>
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+这条启动方式不需要 Node.js 或 Cloudflare 账号，只提供本地页面，不提供云同步。闪卡使用在线 CDN 加载 React、样式等资源，单词发音也会尝试在线词典，因此**当前版本不能保证断网后完整可用**。故事朗读使用浏览器的语音能力，声音和离线可用性取决于系统。
 
-## Workspace Auth Headers
+快捷键：`Space` 翻牌，`←` 不认识加点，`→` 认识，`↑` 听发音。也可以直接点页面按钮。
 
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
+## 数据、同步与 API
 
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
+正常刷词和读故事不需要大模型 API。进度默认在当前浏览器的本地存储里，换浏览器、清理站点数据或换访问地址后，原进度可能不再可见。
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+仓库另有 Cloudflare Worker + D1 同步实现。**自行部署前必须替换 `wrangler.jsonc` 中的数据库标识、`worker/index.ts` 中的来源配置，以及 `public/flashcards.html` 中的同步地址。** 当前代码仍保留原部署配置；它们不是 API Key，也不代表提供给所有使用者的公共服务。请通过上述本地 HTTP 地址使用，不要在直接双击 HTML 后启用云同步。
 
-Treat the full name as optional and fall back to email when it is absent:
+同步码相当于那份进度的访问凭证，不要公开。用户自行配置云端账号与服务、承担相应费用。故事已读标记不在闪卡同步范围内。
 
-```tsx
-import { headers } from "next/headers";
+## 配套 AI Skill
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
+[`skills/ielts-vocab-coach/SKILL.md`](skills/ielts-vocab-coach/SKILL.md) 提供复习、抽查、造句和复述的辅导规则。可以把该目录交给支持 `SKILL.md` 的 AI 工具加载，也可以直接让助手参考文件内容安排一轮练习。
 
-  const displayName = fullName ?? email;
-  // ...
-}
-```
+Skill 是给 AI 的工作流程说明，网页不会自动执行它；使用者自己的 AI 工具负责模型连接和费用。不要把 API Key 写进 Skill。
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+## 当前范围与资料来源
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+- 这是个人学习项目，与教材出版方没有官方关联；不承诺分数提升或记忆效果。
+- 词表围绕《雅思词汇真经》组织，部分释义与音标来自 ECDICT。源码、词表、释义、故事的来源与授权说明尚待补齐，当前仓库没有统一的开源许可证。
+- 当前已有学习界面和基础 Skill，尚缺完整轮次记录、内置 Skill 安装器和经过验证的纯离线包。
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+## 作者与反馈
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+作者：[shane-lin67](https://github.com/shane-lin67)。反馈请到 [Issues](https://github.com/shane-lin67/ielts-vocabulary-3673/issues)。请描述具体单词、章节、操作步骤和浏览器，不要附同步码或私人学习数据。
