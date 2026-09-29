@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ielts-vocab-3673",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-08-20",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./public",
+    "html_handling": "none"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ielts-vocab-sync",
+      "database_id": "39f459ac-7cc9-4200-bed1-facd91620030",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
